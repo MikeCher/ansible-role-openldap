@@ -5,6 +5,11 @@ At this point the role only supports SHA512 encryption and the passwordhash can 
 ```bash
 echo -n 'your_password' | openssl dgst -sha512 -binary | openssl enc -base64
 ```
+for install openldap-server
+```bash
+    ansible-playbook openldap.yml -t install
+```
+
 for instance, for a username john.doe create with password 'my_password' you would need
 ```bash
 ansible-playbook openldap.yml -t create -e "firstName=John" -e "lastName=Doe" -e "passwordHash={SHA512}3ajDRohg3LJOIoq47kQgjUPrL1/So6U4uvvTnbT/EUyYKaZL0aRxDgwCH4pBNLai+LF+zMh//nnYRZ4t8pT7AQ=="

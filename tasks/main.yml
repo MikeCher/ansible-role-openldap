@@ -57,6 +57,21 @@
     state: present
   tags: install
 
+- name: Make sure setuptools and wheel pip modules are present (needed to build python-ldap)
+  pip:
+    name:
+      - setuptools
+      - wheel
+    state: present
+  tags: install
+
+- name: Make sure python-ldap pip module is present
+  pip:
+    name:
+      - python-ldap
+    state: present
+  tags: install
+
 - name: Check to see if we have loaded password module for openldap
   command: ldapsearch -H ldapi:// -Y EXTERNAL -b "cn=module{0},cn=config" -LLL -Q olcModuleLoad={1}pw-sha2
   register: pw_sha2
