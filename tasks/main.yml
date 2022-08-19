@@ -10,6 +10,6 @@
   include_tasks: delete_user.yml
   tags: delete
 
-- name: search users
-  include_tasks: search_users.yml
-  tags: search  
+- name: install client
+  include_tasks: install_client.yml
+  tags: install_client  

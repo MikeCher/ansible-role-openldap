@@ -1,12 +1,19 @@
 ---
+#install server
+
 openldap_org: example
 openldap_tld: com
 openldap_base: "dc={{ openldap_org }},dc={{ openldap_tld }}"
 domain_name: "{{ openldap_org }}.{{ openldap_tld }}"
 
 openldap_ous:
-  - people
-  - groups
+  - People
+  - Groups
 
 openldap_admin_password: super_secure_password
 
+##install client
+dc_string: dc=example,dc=com
+ldap_user_id: admin
+ldap_server_list:
+  - 192.168.56.38

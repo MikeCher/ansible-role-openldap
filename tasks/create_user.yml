@@ -22,6 +22,13 @@
   debug:
      msg: "{{ uidNumbers_list  | community.general.json_query ('results[*].uidNumber') | max  }}"
   register: uidNumbers_list_unique 
+  when:  uidNumbers_list.results | length != 0
+  tags: create
+
+- set_fact:
+    uidNumbers_list_unique:
+      msg : "10000"
+  when:  uidNumbers_list.results | length == 0
   tags: create
 
 - name: Create users

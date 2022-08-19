@@ -25,3 +25,8 @@ when you need list of users on a running LDAP instance, you can do this
 ```bash
 ansible-playbook openldap.yml -t search
 ```
+
+for install openldap-client
+```bash
+    ansible-playbook openldap.yml -t install_client
+```
