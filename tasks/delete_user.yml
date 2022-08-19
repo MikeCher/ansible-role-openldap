@@ -1,0 +1,21 @@
+- name: Make sure we have a parent entry for users
+  community.general.ldap_entry:
+    dn: "ou={{ item }},dc={{ openldap_org }},dc={{ openldap_tld }}"
+    objectClass:
+       - organizationalUnit
+       - PosixAccount
+    bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
+  with_items: "{{ openldap_ous }}"
+  tags: delete 
+
+- name: Delete users to regenerate
+  ldap_entry:
+    dn: "uid={{ firstName|lower }}.{{ lastName|lower }},ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    objectClass:
+      - inetOrgPerson
+      -  PosixAccount
+    state: absent
+    bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
+  tags: delete

@@ -1,0 +1,47 @@
+- name: Make sure we have a parent entry for users
+  community.general.ldap_entry:
+    dn: "ou={{ item }},dc={{ openldap_org }},dc={{ openldap_tld }}"
+    objectClass:
+       - organizationalUnit
+    bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
+  with_items: "{{ openldap_ous }}"
+  tags: create
+
+- name: list of all users uidNumbers
+  community.general.ldap_search:
+    dn: "ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    scope: "subordinate"
+    attrs:
+      - "gidNumber"
+      - "uidNumber"
+  register: uidNumbers_list 
+  tags: create
+
+- name: Give max uidNumber
+  debug:
+     msg: "{{ uidNumbers_list  | community.general.json_query ('results[*].uidNumber') | max  }}"
+  register: uidNumbers_list_unique 
+  tags: create
+
+- name: Create users
+  ldap_entry:
+    dn: "uid={{ firstName[0]|lower }}.{{ lastName|lower }},ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    objectClass:
+      - inetOrgPerson
+      - posixAccount
+      - shadowAccount
+    state: present
+    bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
+    attributes:
+      userPassword: "{{ passwordHash }}"
+      sn: "{{ lastName }}"
+      givenName: "{{ firstName }}"
+      cn: "{{ firstName }} {{ lastName }}"
+      displayName: "{{ firstName }} {{ lastName }}"
+      uidNumber: "{{ uidNumbers_list_unique.msg | int + 1 }}"
+      gidNumber: "{{ uidNumbers_list_unique.msg | int + 5001 }}" 
+      homeDirectory: "/home/{{ firstName[0]|lower }}.{{ lastName|lower }}" 
+      loginShell: /bin/bash
+  tags: create

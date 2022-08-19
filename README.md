@@ -7,7 +7,7 @@ echo -n 'your_password' | openssl dgst -sha512 -binary | openssl enc -base64
 ```
 for install openldap-server
 ```bash
-    ansible-playbook openldap.yml -t install
+    ansible-playbook openldap.yml -t install_server
 ```
 
 for instance, for a username john.doe create with password 'my_password' you would need
