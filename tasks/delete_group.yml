@@ -1,0 +1,12 @@
+- name: delete group 
+  ldap_entry:
+    dn: "cn={{ group_name }},ou=Groups,dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+    objectClass:
+      - posixGroup
+    state: absent
+    bind_dn: "cn=admin,dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+    bind_pw: "{{ openldap_admin_password }}"
+    attributes:
+       userPassword: "{{ passwordHash }}"
+       description: "{{ description_group }}"
+  tags: delete_group

@@ -2,14 +2,38 @@
   include_tasks: install_ldap_server.yml
   tags: install_server
 
-- name: create user
-  include_tasks: create_user.yml
-  tags: create
-
-- name: delete user
-  include_tasks: delete_user.yml
-  tags: delete
-
 - name: install client
   include_tasks: install_client.yml
   tags: install_client  
+
+- name: create user
+  include_tasks: create_user.yml
+  tags: create_user
+
+- name: add users to group
+  include_tasks: add_user_to_group.yml
+  tags: add_user_to_group  
+  
+- name: delete user
+  include_tasks: delete_user.yml
+  tags: delete_user
+
+- name: delete user group
+  include_tasks: delete_user_from_group.yml
+  tags: delete_user_from_group
+
+
+- name: add group
+  include_tasks: add_group.yml
+  tags: create_group
+
+- name: delete group
+  include_tasks: delete_group.yml
+  tags: delete_group
+
+- name: search user info
+  include_tasks: search_users.yml
+  tags: search
+
+
+

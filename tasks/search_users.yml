@@ -4,17 +4,29 @@
   register: ldap_groups
   tags: search
 
-- debug: 
-    msg: "{{ ldap_groups }}"
-  tags: search
-
-- name: Return GIDs for all people
+- name: Return INFO for all people
   community.general.ldap_search:
     dn: "ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
     scope: "subordinate"
     attrs:
       - "gidNumber"
       - "uidNumber"
+      - "uid"
+  #  schema: true
+  register: ldap_group_gids
+  tags: search
+  
+- debug: 
+    msg: "{{ ldap_group_gids }}"
+  tags: search
+
+- name: Return INFO for all GROUPS
+  community.general.ldap_search:
+    dn: "ou=Groups,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    scope: "subordinate"
+    attrs:
+      - "gidNumber"
+      - "cn"
   #  schema: true
   register: ldap_group_gids
   tags: search

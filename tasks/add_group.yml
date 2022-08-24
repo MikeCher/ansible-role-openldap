@@ -1,0 +1,48 @@
+- name: list of all users uidNumbers
+  community.general.ldap_search:
+    dn: "ou=Groups,dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+    scope: "subordinate"
+    attrs:
+      - "gidNumber"
+      - "groupName"
+  register: groupNumber_list 
+  tags: create_group
+
+- name: Give max gidNumber
+  debug:
+     msg: "{{ groupNumber_list  | community.general.json_query ('results[*].gidNumber') | max  }}"
+  register: groupNumber_list_unique 
+  when:  groupNumber_list.results | length != 0
+  tags: create_group
+
+- set_fact:
+    groupNumber_list_unique:
+      msg : "15000"
+  when:  groupNumber_list.results | length == 0
+  tags: create_group
+
+
+- name: Make sure we have a parent entry for users
+  community.general.ldap_entry:
+    dn: "ou={{ item }},dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+    objectClass:
+       - organizationalUnit
+    bind_dn: "cn=admin,dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+    bind_pw: "{{ openldap_admin_password }}"
+  with_items: "{{ openldap_ous }}"
+  tags: create_group
+
+
+- name: create group 
+  ldap_entry:
+    dn: "cn={{ group_name }},ou=Groups,dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+    objectClass:
+      - posixGroup
+    state: present
+    bind_dn: "cn=admin,dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+    bind_pw: "{{ openldap_admin_password }}"
+    attributes:
+       userPassword: "{{ passwordHash }}"
+       gidNumber: "{{ groupNumber_list_unique.msg | int + 1 }}" 
+       description: "{{ description_group }}"
+  tags: create_group

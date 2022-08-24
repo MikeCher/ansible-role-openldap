@@ -7,9 +7,9 @@
     bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
     bind_pw: "{{ openldap_admin_password }}"
   with_items: "{{ openldap_ous }}"
-  tags: delete 
+  tags: delete_user 
 
-- name: Delete users to regenerate
+- name: delete_user users to regenerate
   ldap_entry:
     dn: "uid={{ firstName|lower }}.{{ lastName|lower }},ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
     objectClass:
@@ -18,4 +18,4 @@
     state: absent
     bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
     bind_pw: "{{ openldap_admin_password }}"
-  tags: delete
+  tags: delete_user

@@ -6,7 +6,7 @@
     bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
     bind_pw: "{{ openldap_admin_password }}"
   with_items: "{{ openldap_ous }}"
-  tags: create
+  tags: create_user
 
 - name: list of all users uidNumbers
   community.general.ldap_search:
@@ -16,22 +16,22 @@
       - "gidNumber"
       - "uidNumber"
   register: uidNumbers_list 
-  tags: create
+  tags: create_user
 
 - name: Give max uidNumber
   debug:
      msg: "{{ uidNumbers_list  | community.general.json_query ('results[*].uidNumber') | max  }}"
   register: uidNumbers_list_unique 
   when:  uidNumbers_list.results | length != 0
-  tags: create
+  tags: create_user
 
 - set_fact:
     uidNumbers_list_unique:
       msg : "10000"
   when:  uidNumbers_list.results | length == 0
-  tags: create
+  tags: create_user
 
-- name: Create users
+- name: create_user users
   ldap_entry:
     dn: "uid={{ firstName[0]|lower }}.{{ lastName|lower }},ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
     objectClass:
@@ -51,4 +51,4 @@
       gidNumber: "{{ uidNumbers_list_unique.msg | int + 5001 }}" 
       homeDirectory: "/home/{{ firstName[0]|lower }}.{{ lastName|lower }}" 
       loginShell: /bin/bash
-  tags: create
+  tags: create_user

@@ -16,4 +16,22 @@ openldap_admin_password: super_secure_password
 dc_string: dc=example,dc=com
 ldap_user_id: admin
 ldap_server_list:
-  - 192.168.56.38
+  - 192.168.56.44
+
+##add groups to server
+group_name: One
+openldap_org_group: example
+openldap_tld_group: com
+openldap_group_base: "dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
+description_group: "only gods can rule"
+ldap_server_uri:
+  - 192.168.56.44
+
+## add users to group
+openldap_org_user: example
+openldap_tld_user: com
+openldap_user_base: "dc={{ openldap_org_user }},dc={{ openldap_tld_user }}"
+group_name_add: "Fuckers"       
+uid: "j.does"
+     
+
