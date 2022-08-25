@@ -53,6 +53,8 @@
       - libsasl2-dev
       - lcov
       - valgrind
+      - debconf-utils
+      - ldapvi
     state: present
   tags: install_server
 
@@ -87,6 +89,16 @@
 - name: Load password module for openldap if we haven't yet
   command: ldapmodify -Q -Y EXTERNAL -H ldapi:// -f /tmp/pw.ldif
   when: pw_sha2.stdout == ""
+  tags: install_server
+
+- name: Copy ldif for pw module if needed
+  copy:
+    src: openssh-lpk.ldif
+    dest: /tmp/openssh-lpk.ldif
+  tags: install_server
+
+- name: Load password module for openldap if we haven't yet
+  command: ldapadd -H ldapi:/// -Y EXTERNAL -f /tmp/openssh-lpk.ldif 
   tags: install_server
 
 - name: Set a password for the admin user

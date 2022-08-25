@@ -38,6 +38,7 @@
       - inetOrgPerson
       - posixAccount
       - shadowAccount
+      - ldapPublicKey
     state: present
     bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
     bind_pw: "{{ openldap_admin_password }}"
@@ -51,4 +52,5 @@
       gidNumber: "{{ uidNumbers_list_unique.msg | int + 5001 }}" 
       homeDirectory: "/home/{{ firstName[0]|lower }}.{{ lastName|lower }}" 
       loginShell: /bin/bash
+      sshPublicKey: "{{ ssh_key }}"
   tags: create_user
