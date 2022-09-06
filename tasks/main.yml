@@ -35,5 +35,6 @@
   include_tasks: search_users.yml
   tags: search
 
-
-
+- name: add ACL
+  include_tasks: add_acl.yml
+  tags: acl

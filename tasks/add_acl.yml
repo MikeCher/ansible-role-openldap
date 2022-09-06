@@ -1,0 +1,17 @@
+- name: Make sure we have a parent entry for users
+  community.general.ldap_entry:
+    dn: "ou={{ item }},dc={{ acl_openldap_org }},dc={{ acl_openldap_tld }}"
+    objectClass:
+       - organizationalUnit
+    bind_dn: "cn=admin,dc={{acl_openldap_org }},dc={{ acl_openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
+  with_items: "{{ openldap_ous }}"
+  tags: acl
+  
+- name: Set up the ACL
+  ldap_attrs:
+    dn: olcDatabase={1}mdb,cn=config
+    attributes:
+        olcAccess: "{{ olcAccess_ldap }}"    
+    state: exact
+  tags: acl

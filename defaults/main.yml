@@ -41,4 +41,25 @@ openldap_user_base: "dc={{ openldap_org_user }},dc={{ openldap_tld_user }}"
 group_name_add: admins       
 uid: j.does
      
-
+####ACL############Warning!!!!#################
+acl_openldap_org: example
+acl_openldap_tld:  com
+olcAccess_ldap: []
+          # - >-
+          #   {1}to dn.base="dc=example,dc=com"
+          #   by dn="cn=admin,dc=example,dc=com" write
+          #   by * read
+          # - >- ## access none to anonymous
+          #   to *
+          #   by anonymous 
+          #   by * none
+          # - >- 
+          #   to dn.base="dc=example,dc=com"
+          #   by group.exact="cn=admins,ou=groups,dc=example,dc=com" write
+          #   by users  read
+          #   by * none
+          # - >- 
+          #   access to dn.one="ou=equipment,dc=example,dc=com"
+          #   by group.exact="cn=itpeople,ou=groups,dc=example,dc=com" write
+          #   by users      read
+          #   by *          none
