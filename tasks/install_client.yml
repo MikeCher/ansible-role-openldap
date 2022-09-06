@@ -17,6 +17,7 @@
   with_items:
     - nsswitch.conf
     - nslcd.conf
+    - nscd.conf
   tags: install_client  
 
 - name: copy pam common-session config
@@ -36,12 +37,3 @@
     - nscd
     - nslcd
   tags: install_client  
-
-# - name: test ldap user exist
-#   shell: getent passwd {{ldap_user_id}}
-#   register: ldap_user_exist
-#   tags: install_client  
-
-# - name: show test ldap user exist result
-#   debug: var=ldap_user_exist.stdout
-#   tags: install_client  

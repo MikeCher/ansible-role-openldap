@@ -12,7 +12,6 @@
       - "gidNumber"
       - "uidNumber"
       - "uid"
-  #  schema: true
   register: ldap_group_gids
   tags: search
   
@@ -27,7 +26,6 @@
     attrs:
       - "gidNumber"
       - "cn"
-  #  schema: true
   register: ldap_group_gids
   tags: search
   

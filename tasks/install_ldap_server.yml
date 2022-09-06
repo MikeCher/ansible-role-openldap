@@ -6,7 +6,7 @@
     vtype: "{{ item.vtype }}"
   with_items:
     - question: slapd/backend
-      value: HDB
+      value: MDB
       vtype: string
     - question: slapd/move_old_database
       value: 'true'
@@ -54,7 +54,6 @@
       - lcov
       - valgrind
       - debconf-utils
-      - ldapvi
     state: present
   tags: install_server
 

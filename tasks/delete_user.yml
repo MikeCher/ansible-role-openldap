@@ -9,13 +9,35 @@
   with_items: "{{ openldap_ous }}"
   tags: delete_user 
 
+- name: Return INFO for all GROUPS
+  community.general.ldap_search:
+    dn: "ou=Groups,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    scope: "subordinate"
+    filter: "(memberUid={{uid}})"
+  register: ldap_group_gids
+  tags: delete_user
+  
+- name: delete_user_from_groups
+  ldap_attrs:
+ #   server_uri: "{{ldap_server_uri}}"
+    bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
+    dn: "{{ item.dn }}"
+    attributes:  
+      userPassword: "{{ passwordHash }}"
+      memberuid: "{{ uid }}"
+    state: absent
+  with_items: "{{ ldap_group_gids.results}}"
+  tags: delete_user 
+
 - name: delete_user users to regenerate
   ldap_entry:
-    dn: "uid={{ firstName|lower }}.{{ lastName|lower }},ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    dn: "uid={{ uid }},ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
     objectClass:
       - inetOrgPerson
-      -  PosixAccount
+      - PosixAccount
     state: absent
     bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
     bind_pw: "{{ openldap_admin_password }}"
   tags: delete_user
+
