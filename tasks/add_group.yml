@@ -10,9 +10,13 @@
 
 - name: Give max gidNumber
   debug:
-     msg: "{{ groupNumber_list  | community.general.json_query ('results[*].gidNumber') | max  }}"
+     msg: "{{ groupNumber_list  | community.general.json_query ('results[*].gidNumber') | map('int') | max  }}"
   register: groupNumber_list_unique 
   when:  groupNumber_list.results | length != 0
+  tags: create_group
+
+- debug:
+     msg: "{{ groupNumber_list_unique  }}"
   tags: create_group
 
 - set_fact:
@@ -43,6 +47,7 @@
     bind_pw: "{{ openldap_admin_password }}"
     attributes:
        userPassword: "{{ passwordHash }}"
-       gidNumber: "{{ groupNumber_list_unique.msg | int + 1 }}" 
+       gidNumber: "{% if gidNumber1 != '' %}{{ gidNumber1 }}{% else %}{{ groupNumber_list_unique.msg | int + 1 }}{% endif %}" 
        description: "{{ description_group }}"
   tags: create_group
+  

@@ -22,10 +22,12 @@ ldap_user_id: admin
 ldap_server_list:
   - 192.168.56.81
 
+
 ##add groups to server
-group_name: users
+group_name: users_zero1
 openldap_org_group: example
 openldap_tld_group: com
+gidNumber1: ''
 openldap_group_base: "dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
 description_group: "group for banned users"
 ldap_server_uri:
