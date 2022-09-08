@@ -28,7 +28,7 @@ ansible-playbook openldap.yml -t search
 
 for install openldap-client
 ```bash
-    ansible-playbook openldap.yml -t install_client
+ansible-playbook openldap.yml -t install_client
 ```
 
 for create group 
@@ -47,6 +47,11 @@ for add user to group:
 delete user from group
 1) use search for take uid
 2)
+```bash
+ ansible-playbook openldap.yml -t delete_user_from_group  -e "passwordHash={SHA512}3ajDRohg3LJOIoq47kQgjUPrL1/So6U4uvvTnbT/EUyYKaZL0aRxDgwCH4pBNLai+LF+zMh//nnYRZ4t8pT7AQ=="
+```
+
+delete group
 ```bash
  ansible-playbook openldap.yml -t delete_user_from_group  -e "passwordHash={SHA512}3ajDRohg3LJOIoq47kQgjUPrL1/So6U4uvvTnbT/EUyYKaZL0aRxDgwCH4pBNLai+LF+zMh//nnYRZ4t8pT7AQ=="
 ```

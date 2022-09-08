@@ -100,6 +100,28 @@
   command: ldapadd -H ldapi:/// -Y EXTERNAL -f /tmp/openssh-lpk.ldif 
   tags: install_server
 
+- name: Copy ldif for logs module if needed
+  copy:
+    src: log.ldif
+    dest: /tmp/log.ldif
+  tags: install_server
+
+- name: Load password module for openldap if we haven't yet
+  command: ldapmodify -Y EXTERNAL -H ldapi:/// -f /tmp/log.ldif
+  tags: install_server
+
+
+- name: Change Rsyslog for logging
+  shell: | 
+          cat >> /etc/rsyslog.conf << "EOF" 
+          LOCAL4.* /var/log/slapd.log
+          EOF
+  tags: install_server
+
+- name: restart Rsyslog
+  command: systemctl restart rsyslog
+  tags: install_server
+
 - name: Set a password for the admin user
   community.general.ldap_passwd:
     dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"

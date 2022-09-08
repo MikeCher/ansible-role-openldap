@@ -1,5 +1,7 @@
 - name: list of all users uidNumbers
   community.general.ldap_search:
+    bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
     dn: "ou=Groups,dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
     scope: "subordinate"
     attrs:
@@ -50,4 +52,3 @@
        gidNumber: "{% if gidNumber1 != '' %}{{ gidNumber1 }}{% else %}{{ groupNumber_list_unique.msg | int + 1 }}{% endif %}" 
        description: "{{ description_group }}"
   tags: create_group
-  

@@ -10,6 +10,8 @@
 
 - name: list of all users uidNumbers
   community.general.ldap_search:
+    bind_dn: "cn=admin,dc={{ openldap_org }},dc={{ openldap_tld }}"
+    bind_pw: "{{ openldap_admin_password }}"
     dn: "ou=People,dc={{ openldap_org }},dc={{ openldap_tld }}"
     scope: "subordinate"
     attrs:

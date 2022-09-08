@@ -20,10 +20,10 @@ ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8OldtAiW9lQ0/2VJcc9UpRW9nfcusGX
 dc_string: dc=example,dc=com
 ldap_user_id: admin
 ldap_server_list:
-  - 192.168.56.81
+  - 192.168.56.99
 
 
-##add groups to server
+##add groups to server/delete group
 group_name: users_zero1
 openldap_org_group: example
 openldap_tld_group: com
@@ -31,7 +31,7 @@ gidNumber1: ''
 openldap_group_base: "dc={{ openldap_org_group }},dc={{ openldap_tld_group }}"
 description_group: "group for banned users"
 ldap_server_uri:
-  - 192.168.56.81
+  - 192.168.56.99
 
 
 ## add users to group/ delete user from group
@@ -45,21 +45,25 @@ uid: j.does
 acl_openldap_org: example
 acl_openldap_tld:  com
 olcAccess_ldap: []
-          # - >-
-          #   {1}to dn.base="dc=example,dc=com"
-          #   by dn="cn=admin,dc=example,dc=com" write
-          #   by * read
-          # - >- ## access none to anonymous
-          #   to *
-          #   by anonymous 
-          #   by * none
-          # - >- 
-          #   to dn.base="dc=example,dc=com"
-          #   by group.exact="cn=admins,ou=groups,dc=example,dc=com" write
-          #   by users  read
-          #   by * none
-          # - >- 
-          #   access to dn.one="ou=equipment,dc=example,dc=com"
-          #   by group.exact="cn=itpeople,ou=groups,dc=example,dc=com" write
-          #   by users      read
-          #   by *          none
+# - >-
+#   to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * break
+# - >-
+#   to dn.exact="" by * read
+# - >-
+#   to dn.base="cn=Subschema" by * read
+# - >- ##access to users in admins
+#   to * by set.expand="([uid=] + ([cn=admins,ou=Groups,dc=example,dc=com])/memberUid + [ou=People,dc=example,dc=com])/entryDN & user"write by * break
+# - >- ## access none to anonymous
+#   to *
+#   by anonymous 
+#   by * none
+# - >- 
+#   to dn.base="dc=example,dc=com"
+#   by group.exact="cn=admins,ou=groups,dc=example,dc=com" write
+#   by users  read
+#   by * none
+# - >- 
+#   access to dn.one="ou=equipment,dc=example,dc=com"
+#   by group.exact="cn=itpeople,ou=groups,dc=example,dc=com" write
+#   by users      read
+#   by *          none

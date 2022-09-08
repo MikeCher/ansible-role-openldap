@@ -11,6 +11,9 @@
 - name: Set up the ACL
   ldap_attrs:
     dn: olcDatabase={1}mdb,cn=config
+    # bind_dn: "cn=admin,dc=example,dc=com"
+    # bind_pw: "{{ openldap_admin_password }}"
+    referrals_chasing: disabled
     attributes:
         olcAccess: "{{ olcAccess_ldap }}"    
     state: exact
